@@ -7,17 +7,19 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
+        android:theme="@style/Theme.AppCompat.Light">
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="26ba8fb13779fbe87b139815c8b23faa043743d4" />
-        <activity android:name=".MainActivity" >
+        <activity android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat.Light">
 
+        </activity>
 
     </application>
 

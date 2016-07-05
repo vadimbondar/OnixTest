@@ -1,59 +1,70 @@
 package com.example.bv.onixtest;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+import com.example.bv.onixtest.HomeFragment;
+import com.example.bv.onixtest.ProfileFragment;
 
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-
-import io.fabric.sdk.android.Fabric;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class MainActivity extends Activity {
+/**
+ * Created by bv on 05.07.16.
+ */
+public class MainActivity extends ActionBarActivity
+{
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "UFZbipXZHVUAlEXo9rF771vtv";
-    private static final String TWITTER_SECRET = "jQvXj3Z9YFd1dl9HEimeCNDyXY8ClDNg7c9h2dR10S5sGGcDsG";
-    private TwitterAuthConfig authConfig;
-   // loginButton;
-   TwitterLoginButton loginButton;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this,new Twitter(authConfig));
-
-
-        loginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                TwitterSession session =result.data;
-                Toast.makeText(MainActivity.this,session.getUserName(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        });
+        toolbar =(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
     }
+    private void setupViewPager (ViewPager viewPager){
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new HomeFragment(),"Home");
+        adapter.addFragment(new ProfileFragment(),"Profile");
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //  super.onActivityResult(requestCode, resultCode, data);
-        loginButton.onActivityResult(requestCode,resultCode,data);
+    }
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList= new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+        public ViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+        public void addFragment(Fragment fragment,String string){
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(string);
+        }
+        public CharSequence getPageTitle(int position){
+            return mFragmentTitleList.get(position);
+        }
     }
 }
